@@ -1,0 +1,6 @@
+Date
+CNUM
+Amount
+MerchantName
+MCC
+MerchantCity

@@ -1,0 +1,12 @@
+CNUM
+Name
+Surname
+Patronymic
+CategoryCode
+Gender
+Age
+Merried
+Email
+PhoneNumber
+Employer
+ResidentType

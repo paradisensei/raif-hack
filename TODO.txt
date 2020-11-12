@@ -1,0 +1,19 @@
+1. обработка dtypes в data_loader
+2. обработка dtypes в data_loader_mcc
+3. обработка dtypes в data_loader_stores
+4. обработка dtypes в data_loader_transactions
+5. обработка dtypes в data_loader_clients
+6. обработка dtypes в data_loader_client_categories
+7. обработка dtypes в data_loader_client_internet_data
+8. обработка dtypes в create_synthetical_data
+9. обработка dtypes в button_...
+10. реализация metrics.LTV
+11. реализация metrics.Retention
+12. реализация metrics.MostValuableSegments
+13. реализация metrics.ShapTopFeatures
+14. реализация metrics.MostProbableSegments
+15. реализация button_LTV
+16. реализация button_Retention
+17. реализация button_MostValuableSegments
+18. реализация button_ShapTopFeatures
+19. реализация button_MostProbableSegments
