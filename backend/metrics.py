@@ -15,13 +15,12 @@ def NewClientTransactions(Transactions, start_date=None, end_date=None):
     int
     '''
     
-    freq = Transactions.groupby('CNUM')['Amount'].count().reset_index()
-    freq = freq.rename({'Amount':'Frequency'}, axis=1)
-    freq = freq[freq['Frequency']==1]
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
+    Transactions = Transactions[cond1&cond2]
     
-    cond1 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond2 = 1 if end_date is None else Transactions['Date'] <= end_date
-    Transactions = pd.merge(Transactions[cond1&cond2], freq, how='inner', on='CNUM')
+    Transactions = Transactions.groupby('CNUM')['Amount'].count().reset_index() #.rename({'Amount':'Frequency'}, axis=1)
+    Transactions = Transactions[Transactions['Amount']==1]
     
     return Transactions.shape[0]
 
@@ -37,9 +36,9 @@ def ClientAverageBill(Transactions, start_date=None, end_date=None, clients=None
     pd.Series(index=CNUM, data=mean(Amount))
     '''
     
-    cond1 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond2 = 1 if end_date is None else Transactions['Date'] <= end_date
-    cond3 = 1 if clients is None else Transactions['CNUM'].isin(clients)
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
+    cond3 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
     Transactions = Transactions[cond1&cond2&cond3].groupby('CNUM')['Amount'].mean()
     
     return Transactions
@@ -56,8 +55,8 @@ def AverageBill(Transactions, start_date=None, end_date=None):
     float
     '''
     
-    cond1 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond2 = 1 if end_date is None else Transactions['Date'] <= end_date
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
     Transactions = Transactions[cond1&cond2]
     n = Transactions['CNUM'].nunique() * 1.0
     
@@ -75,17 +74,18 @@ def AverageTransactionNumber(Transactions, start_date=None, end_date=None, clien
     float
     '''
     
-    cond1 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond2 = 1 if end_date is None else Transactions['Date'] <= end_date
-    cond3 = 1 if clients is None else Transactions['CNUM'].isin(clients)
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
+    cond3 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
     Transactions = Transactions[cond1&cond2&cond3]
     
     return Transactions.groupby('CNUM')['Amount'].count().mean()
 
-def Revenue(Transactions, start_date=None, end_date=None, clients=None):
+def Revenue(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
     in:
     Transactions: pd.DataFrame
+    merchant_name: str
     start_date: datetime
     start_date: datetime
     cliets: list-like
@@ -94,14 +94,15 @@ def Revenue(Transactions, start_date=None, end_date=None, clients=None):
     float
     '''
     
-    cond4 = 1 if clients is None else Transactions['CNUM'].isin(clients)
+    cond4 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
     Transactions = Transactions[cond4]
-    cond1 = 1 if start_date is None else Transactions['Date'] < start_date
-    cond2 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond3 = 1 if end_date is None else Transactions['Date'] <= end_date
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] < start_date
+    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
+    cond5 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
     
-    a = Transactions[cond2&cond3]['Amount'].sum()
-    b = Transactions[cond1]['Amount'].sum()
+    a = Transactions[cond2&cond3&cond5]['Amount'].sum()
+    b = Transactions[cond1&cond5]['Amount'].sum()
     
     return ((a-b) / b)*100.0 if b != 0 else np.nan
 
@@ -119,11 +120,11 @@ def IncomeInSegmentRate(Transactions, merchant_name, competitor_merchants, start
     float
     '''
     
-    cond4 = 1 if clients is None else Transactions['CNUM'].isin(clients)
+    cond4 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
     Transactions = Transactions[cond4]
-    cond1 = 1 if start_date is None else Transactions['Date'] < start_date
-    cond2 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond3 = 1 if end_date is None else Transactions['Date'] <= end_date
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] < start_date
+    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
     cond5 = Transactions['MerchantName'] == merchant_name
     cond6 = Transactions['MerchantName'].isin(competitor_merchants)
     
@@ -151,10 +152,10 @@ def ClientNumberInSegmentRate(Transactions, merchant_name, competitor_merchants,
     float
     '''
     
-    cond1 = 1 if clients is None else Transactions['CNUM'].isin(clients)
+    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
     Transactions = Transactions[cond1]
-    cond2 = 1 if start_date is None else Transactions['Date'] >= start_date
-    cond3 = 1 if end_date is None else Transactions['Date'] <= end_date
+    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
     cond4 = Transactions['MerchantName'] == merchant_name
     cond5 = Transactions['MerchantName'].isin(competitor_merchants)
     

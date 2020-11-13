@@ -1,12 +1,12 @@
-CNUM
-Name
-Surname
-Patronymic
-CategoryCode
-Gender
-Age
-Merried
-Email
-PhoneNumber
-Employer
-ResidentType
+CNUM	int
+Name	str
+Surname	str
+Patronymic	str
+CategoryCode	int
+Gender	str
+Age	int
+Merried	str
+Email	str
+PhoneNumber	str
+Employer	str
+ResidentType	int

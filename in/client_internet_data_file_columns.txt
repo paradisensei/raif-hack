@@ -1,1 +1,1 @@
-CNUM
+CNUM	int

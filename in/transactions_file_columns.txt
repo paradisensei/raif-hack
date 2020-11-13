@@ -1,6 +1,6 @@
-Date
-CNUM
-Amount
-MerchantName
-MCC
-MerchantCity
+Date	datetime
+CNUM	int
+Amount	float
+MerchantName	str
+MCC	int
+MerchantCity	str
