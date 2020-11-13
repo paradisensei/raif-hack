@@ -41,9 +41,10 @@ def button_NewClientTransactions(start_date=None, end_date=None):
     
     return metrics.NewClientTransactions(df, start_date, end_date)
 
-def button_ClientAverageBill(start_date=None, end_date=None, clients=None):
+def button_ClientAverageBill(merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
     in:
+    merchant_name: str
     start_date: datetime
     start_date: datetime
     cliets: list-like
@@ -56,7 +57,7 @@ def button_ClientAverageBill(start_date=None, end_date=None, clients=None):
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
-    return metrics.ClientAverageBill(df, start_date, end_date, clients)
+    return metrics.ClientAverageBill(df, merchant_name, start_date, end_date, clients)
 
 def button_AverageBill(start_date=None, end_date=None):
     '''
@@ -75,9 +76,10 @@ def button_AverageBill(start_date=None, end_date=None):
     
     return metrics.AverageBill(df, start_date, end_date)
 
-def button_AverageTransactionNumber(start_date=None, end_date=None, clients=None):
+def button_AverageTransactionNumber(merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
     in:
+    merchant_name: str
     start_date: datetime
     start_date: datetime
     cliets: list-like
@@ -90,7 +92,7 @@ def button_AverageTransactionNumber(start_date=None, end_date=None, clients=None
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
-    return metrics.AverageTransactionNumber(df, start_date, end_date, clients)
+    return metrics.AverageTransactionNumber(df, merchant_name, start_date, end_date, clients)
 
 def button_Revenue(merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
@@ -109,12 +111,11 @@ def button_Revenue(merchant_name=None, start_date=None, end_date=None, clients=N
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
     return metrics.Revenue(df, merchant_name, start_date, end_date, clients)
-
-def button_IncomeInSegmentRate(merchant_name, competitor_merchants, start_date=None, end_date=None, clients=None):
+    
+def button_RevenueDynamicByDay(merchants=None, start_date=None, end_date=None, clients=None):
     '''
     in:
-    merchant_name: str
-    competitor_merchants: list-like of str
+    merchants: list of str
     start_date: datetime
     start_date: datetime
     cliets: list-like
@@ -127,13 +128,14 @@ def button_IncomeInSegmentRate(merchant_name, competitor_merchants, start_date=N
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
-    return metrics.IncomeInSegmentRate(df, merchant_name, competitor_merchants, start_date, end_date, clients)
+    return metrics.RevenueDynamicByDay(df, merchants, start_date, end_date, clients)
 
-def button_ClientNumberInSegmentRate(merchant_name, competitor_merchants, start_date=None, end_date=None, clients=None):
+def button_IncomeInSegmentRate(merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
     '''
     in:
     merchant_name: str
     competitor_merchants: list-like of str
+    n: int
     start_date: datetime
     start_date: datetime
     cliets: list-like
@@ -146,7 +148,47 @@ def button_ClientNumberInSegmentRate(merchant_name, competitor_merchants, start_
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
-    return metrics.ClientNumberInSegmentRate(df, merchant_name, competitor_merchants, start_date, end_date, clients)
+    return metrics.IncomeInSegmentRate(df, merchant_name, competitor_merchants, n, start_date, end_date, clients)
+
+def button_ClientNumberInSegmentRate(merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
+    '''
+    in:
+    merchant_name: str
+    competitor_merchants: list-like of str
+    n: int
+    start_date: datetime
+    start_date: datetime
+    cliets: list-like
+    
+    out:
+    float
+    '''
+    
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
+    df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
+    
+    return metrics.ClientNumberInSegmentRate(df, merchant_name, competitor_merchants, n, start_date, end_date, clients)
+    
+def button_TransactionNumberInSegmentRate(merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
+    '''
+    in:
+    merchant_name: str
+    competitor_merchants: list-like of str
+    n: int
+    start_date: datetime
+    start_date: datetime
+    cliets: list-like
+    
+    out:
+    float
+    '''
+    
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
+    df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
+    
+    return metrics.TransactionNumberInSegmentRate(df, merchant_name, competitor_merchants, n, start_date, end_date, clients)
 
 def button_Gender(f=np.sum):
     '''
