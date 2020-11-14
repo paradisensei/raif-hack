@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 import sys, os, random, re, datetime
 from operator import attrgetter
+from imp import reload
+
+sys.path.append('.')
+from . import tree_utils; reload(tree_utils);
 
 
 
@@ -329,6 +333,16 @@ def Retention(Transactions, merchant_name=None, start_date=None, end_date=None, 
     retention_matrix = cohort_pivot.divide(cohort_size, axis=0)
     
     return retention_matrix
+
+def MostProbableSegments():
+    '''
+    in:
+    
+    out:
+    
+    '''
+    
+    return None
 
 def MostPayableSegments():
     '''
