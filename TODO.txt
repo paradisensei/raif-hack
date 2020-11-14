@@ -1,10 +1,6 @@
-1. реализация metrics.LTV
-2. реализация metrics.Retention
-3. реализация metrics.MostValuableSegments
-4. реализация metrics.ShapTopFeatures
-5. реализация metrics.MostProbableSegments
-6. реализация button_LTV
-7. реализация button_Retention
-8. реализация button_MostValuableSegments
-9. реализация button_ShapTopFeatures
-10. реализация button_MostProbableSegments
+1. реализация metrics.MostValuableSegments
+2. реализация metrics.ShapTopFeatures
+3. реализация metrics.MostProbableSegments
+4. реализация button_MostValuableSegments
+5. реализация button_ShapTopFeatures
+6. реализация button_MostProbableSegments

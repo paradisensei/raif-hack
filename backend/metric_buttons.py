@@ -228,25 +228,41 @@ def button_Age(f=np.mean):
     
     return metrics.Age(df1, df2, f)
 
-def button_LTV():
+def button_LTV(merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
     in:
+    merchant_name: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime
+    clients: list-like
     
     out:
-    
+    pd.Series(index=CNUM, data=LTV)
     '''
     
-    return None
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
+    df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
+    
+    return metrics.LTV(df, merchant_name, start_date, end_date, clients)
 
-def button_Retention():
+def button_Retention(merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
     in:
+    merchant_name: str
+    start_date: datetime.datetime
+    end_date: datetime.datetime
+    clients: list-like
     
     out:
-    
+    pd.DataFrame
     '''
     
-    return None
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
+    df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
+    
+    return metrics.Retention(df, merchant_name, start_date, end_date, clients)
 
 def button_MostPayableSegments():
     '''
