@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dashboard - Brand</title>
+    <link rel="stylesheet" href="assets/home.css">
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.0/css/all.css">
@@ -138,7 +139,28 @@
             </nav>
             <div class="container-fluid">
                 <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                    <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a></div>
+                    <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="card shadow mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="text-primary font-weight-bold m-0">Выбор временного интервала для расчета метрик</h6>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-inline" action="/dashboard" method="GET">
+                                    <input type="hidden" value="{{store}}" name="store">
+                                    <label for="start_date">Начальная дата : </label>
+                                    <input class="form-control" type="date" value="2019-09-11" id="start_date" name="start_date">
+                                    <label for="end_date">Конечная дата : </label>
+                                    <input class="form-control" type="date" value="2019-12-15" id="end_date" name="end_date">
+
+                                    <button class="btn btn-primary" type="submit" id="recalculate">Рассчитать</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-md-6 col-xl-3 mb-4">
                         <div class="card shadow border-left-primary py-2">
@@ -171,17 +193,8 @@
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
                                     <div class="col mr-2">
-                                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span>retention</span></div>
-                                        <div class="row no-gutters align-items-center">
-                                            <div class="col-auto">
-                                                <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>50%</span></div>
-                                            </div>
-                                            <div class="col">
-                                                <div class="progress progress-sm">
-                                                    <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;"><span class="sr-only">50%</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <div class="text-uppercase text-info font-weight-bold text-xs mb-1"><span># клиентов</span></div>
+                                        <div class="text-dark font-weight-bold h5 mb-0 mr-3"><span>{{client_count}}</span></div>
                                     </div>
                                     <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
                                 </div>
@@ -193,8 +206,8 @@
                             <div class="card-body">
                                 <div class="row align-items-center no-gutters">
                                     <div class="col mr-2">
-                                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>Pending Requests</span></div>
-                                        <div class="text-dark font-weight-bold h5 mb-0"><span>18</span></div>
+                                        <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span># конкурентов</span></div>
+                                        <div class="text-dark font-weight-bold h5 mb-0"><span>5</span></div>
                                     </div>
                                     <div class="col-auto"><i class="fas fa-comments fa-2x text-gray-300"></i></div>
                                 </div>
@@ -282,7 +295,7 @@
                         </div>
                         <div class="card-body">
                             {% for iis in income_in_segment %}
-                                {% if iis[0]==merchant %}
+                                {% if iis[0]==store %}
                                     <h4 class="small font-weight-bold">ВЫ ({{iis[0]}})<span class="float-right">{{iis[2]}}</span></h4>
                                     <div class="progress mb-4">
                                         <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{iis[1]}}%;"><span class="sr-only">20%</span></div>
@@ -304,7 +317,7 @@
                         </div>
                         <div class="card-body">
                             {% for cis in clients_in_segment %}
-                                {% if cis[0]==merchant %}
+                                {% if cis[0]==store %}
                                     <h4 class="small font-weight-bold">ВЫ ({{cis[0]}})<span class="float-right">{{cis[2]}}</span></h4>
                                     <div class="progress mb-4">
                                         <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{cis[1]}}%;"><span class="sr-only">20%</span></div>
