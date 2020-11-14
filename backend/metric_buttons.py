@@ -191,13 +191,13 @@ def button_TransactionNumberInSegmentRate(merchant_name, competitor_merchants=No
     
     return metrics.TransactionNumberInSegmentRate(df, merchant_name, competitor_merchants, n, start_date, end_date, clients)
 
-def button_Gender(f=np.sum):
+def button_Gender():
     '''
     in:
-    f: object
+    None
     
     out:
-    pd.Series(index=Gender, data=f(Amount))
+    pd.Series(index=Gender, data=value_counts(normalize=True))
     '''
     
     params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
@@ -208,9 +208,28 @@ def button_Gender(f=np.sum):
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     df2 = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
     
-    return metrics.Gender(df1, df2, f)
+    return metrics.Gender(df1, df2)
 
-def button_Age(f=np.mean):
+def button_Age():
+    '''
+    in:
+    None
+    
+    out:
+    pd.Series(index=Age_group, data=value_counts(normalize=True))
+    '''
+    
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
+    df1 = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
+    
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
+    df2 = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
+    
+    return metrics.Age(df1, df2)
+    
+def button_AmountByGender(f=np.sum):
     '''
     in:
     f: object
@@ -227,7 +246,26 @@ def button_Age(f=np.mean):
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     df2 = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
     
-    return metrics.Age(df1, df2, f)
+    return metrics.AmountByGender(df1, df2, f)
+
+def button_AverageBillByAge(f=np.mean):
+    '''
+    in:
+    f: object
+    
+    out:
+    pd.Series(index=Age, data=f(Amount))
+    '''
+    
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
+    df1 = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
+    
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
+    columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
+    df2 = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
+    
+    return metrics.AverageBillByAge(df1, df2, f)
 
 def button_LTV(merchant_name=None, start_date=None, end_date=None, clients=None):
     '''

@@ -90,7 +90,8 @@ def AverageTransactionNumber(Transactions, merchant_name=None, start_date=None, 
     gr1 = Transactions[cond1&cond2&cond3&cond4].groupby('Date')['CNUM'].nunique()
     gr2 = Transactions[cond1&cond2&cond3&cond4].groupby('Date')['CNUM'].count()
     
-    return gr2 / gr1
+    #return (gr2 / gr1).sort_index('Date', ascending=True)
+    return (gr2 / gr1).sort_index(ascending=True)
 
 def Revenue(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
     '''
@@ -114,8 +115,10 @@ def Revenue(Transactions, merchant_name=None, start_date=None, end_date=None, cl
     
     a = Transactions[cond2&cond3&cond5].groupby('Date')['Amount'].sum()
     b = Transactions[cond1&cond5].groupby('Date')['Amount'].sum()
+    a = ((a-b) / b)*100.0
     
-    return ((a-b) / b)*100.0
+    #return a.sort_index('Date', ascending=True)
+    return a.sort_index(ascending=True)
     
 def RevenueDynamicByDay(Transactions, merchants=None, start_date=None, end_date=None, clients=None):
     '''
@@ -138,7 +141,8 @@ def RevenueDynamicByDay(Transactions, merchants=None, start_date=None, end_date=
     
     a = Transactions[cond2&cond3&cond4].groupby('Date')['Amount'].sum()
     
-    return a
+    #return a.sort_index('Date', ascending=True)
+    return a.sort_index(ascending=True)
 
 def IncomeInSegmentRate(Transactions, merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
     '''
@@ -242,7 +246,42 @@ def TransactionNumberInSegmentRate(Transactions, merchant_name, competitor_merch
     
     return rating
 
-def Gender(Transactions, Clients, f=np.sum):
+def Gender(Transactions, Clients):
+    '''
+    in:
+    Transactions: pd.DataFrame
+    Clients: pd.DataFrame
+    
+    out:
+    pd.Series(index=Gender, data=value_counts(normalize=True))
+    '''
+    
+    Transactions = pd.merge(Transactions, Clients[['CNUM','Gender']], how='inner', on='CNUM')
+    
+    return Transactions['Gender'].value_counts(normalize=True)
+
+def Age(Transactions, Clients):
+    '''
+    in:
+    Transactions: pd.DataFrame
+    Clients: pd.DataFrame
+    
+    out:
+    pd.Series(index=Age_group, data=value_counts(normalize=True))
+    '''
+    
+    Transactions = pd.merge(Transactions, Clients[['CNUM','Age']], how='inner', on='CNUM')
+    Transactions['Age_group'] = Transactions['Age'].apply(lambda x: '0-20' if x<=20 else
+                                                                    '20-30' if x<=30 else
+                                                                    '30-40' if x<=40 else
+                                                                    '40-50' if x<=50 else
+                                                                    '50-60' if x<=60 else
+                                                                    '60+'
+                                                         )
+    
+    return Transactions['Age_group'].value_counts(normalize=True)
+    
+def AmountByGender(Transactions, Clients, f=np.sum):
     '''
     in:
     Transactions: pd.DataFrame
@@ -257,7 +296,7 @@ def Gender(Transactions, Clients, f=np.sum):
     
     return Transactions.groupby('Gender')['Amount'].agg([f])
 
-def Age(Transactions, Clients, f=np.mean):
+def AverageBillByAge(Transactions, Clients, f=np.mean):
     '''
     in:
     Transactions: pd.DataFrame
