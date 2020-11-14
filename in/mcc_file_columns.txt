@@ -1,2 +1,2 @@
-MCC	int
-CategoryName	str
+mcc	int
+category	str

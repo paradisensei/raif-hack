@@ -1,2 +1,2 @@
-MerchantName	str
-StoreName	str
+store_name	str
+merchant_name	str

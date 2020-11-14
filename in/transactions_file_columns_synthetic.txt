@@ -1,0 +1,6 @@
+Date	datetime
+CNUM	int
+Amount	float
+MerchantName	str
+MCC	int
+MerchantCity	str

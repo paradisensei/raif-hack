@@ -7,7 +7,8 @@ sys.path.append('.')
 from . import data_handling; reload(data_handling);
 from . import metrics; reload(metrics);
 
-PATH_TO_LOADER_CONFIG = 'in/data_loader_config.txt'
+PATH_TO_LOADER_CSV_CONFIG = 'in/data_loader_csv_config.txt'
+PATH_TO_LOADER_XLS_CONFIG = 'in/data_loader_xls_config.txt'
 
 PATH_TO_MCC_COLUMNS = 'in/mcc_file_columns.txt'
 PATH_TO_STORES_COLUMNS = 'in/stores_file_columns.txt'
@@ -16,7 +17,7 @@ PATH_TO_CLIENTS_COLUMNS = 'in/clients_file_columns.txt'
 PATH_TO_CLIENT_CATEGORIES_COLUMNS = 'in/client_categories_file_columns.txt'
 PATH_TO_CLIENT_INTERNET_DATA_COLUMNS = 'in/client_internet_data_file_columns.txt'
 
-PATH_TO_MCC_FILE = 'data/mcc.csv'
+PATH_TO_MCC_FILE = 'data/mcc.xlsx'
 PATH_TO_STORES_FILE = 'data/stores.csv'
 PATH_TO_TRANSACTIONS_FILE = 'data/transactions.csv'
 PATH_TO_CLIENTS_FILE = 'data/clients.csv'
@@ -35,7 +36,7 @@ def button_NewClientTransactions(start_date=None, end_date=None):
     int
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -53,7 +54,7 @@ def button_ClientAverageBill(merchant_name=None, start_date=None, end_date=None,
     pd.Series(index=CNUM, data=mean(Amount))
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -70,7 +71,7 @@ def button_AverageBill(start_date=None, end_date=None):
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -88,7 +89,7 @@ def button_AverageTransactionNumber(merchant_name=None, start_date=None, end_dat
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -106,7 +107,7 @@ def button_Revenue(merchant_name=None, start_date=None, end_date=None, clients=N
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -124,7 +125,7 @@ def button_RevenueDynamicByDay(merchants=None, start_date=None, end_date=None, c
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -144,7 +145,7 @@ def button_IncomeInSegmentRate(merchant_name, competitor_merchants=None, n=5, st
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -164,7 +165,7 @@ def button_ClientNumberInSegmentRate(merchant_name, competitor_merchants=None, n
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -184,7 +185,7 @@ def button_TransactionNumberInSegmentRate(merchant_name, competitor_merchants=No
     float
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -199,11 +200,11 @@ def button_Gender(f=np.sum):
     pd.Series(index=Gender, data=f(Amount))
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df1 = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     df2 = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
     
@@ -218,11 +219,11 @@ def button_Age(f=np.mean):
     pd.Series(index=Gender, data=f(Amount))
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df1 = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     df2 = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
     
@@ -240,7 +241,7 @@ def button_LTV(merchant_name=None, start_date=None, end_date=None, clients=None)
     pd.Series(index=CNUM, data=LTV)
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     
@@ -258,7 +259,7 @@ def button_Retention(merchant_name=None, start_date=None, end_date=None, clients
     pd.DataFrame
     '''
     
-    params = data_handling.read_loader_config(PATH_TO_LOADER_CONFIG)
+    params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_TRANSACTIONS_COLUMNS)
     df = data_handling.data_loader(columns, PATH_TO_TRANSACTIONS_FILE, dict(params))
     

@@ -1,2 +1,2 @@
-Category	str
-CategoryName	str
+category	int
+description	str

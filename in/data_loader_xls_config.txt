@@ -1,0 +1,3 @@
+encoding	cp1251
+sep	;
+extension	.xlsx

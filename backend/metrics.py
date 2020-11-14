@@ -164,9 +164,9 @@ def IncomeInSegmentRate(Transactions, merchant_name, competitor_merchants=None, 
     s2 = Transactions[cond3&cond4&cond6].groupby('MerchantName')[c].sum().reset_index()
     s1 = pd.concat([s1,s2], axis=0, ignore_index=True, sort=False).drop_duplicates().sort_values(c, ascending=False).reset_index(drop=True)
     
-    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values), int(s1[s1['MerchantName']==merchant_name][c].values))]
+    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values)+1, int(s1[s1['MerchantName']==merchant_name][c].values))]
     s1 = s1.head(n)
-    rating += [(i,j,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
+    rating += [(i,j+1,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
     
     return rating
 
@@ -198,9 +198,9 @@ def ClientNumberInSegmentRate(Transactions, merchant_name, competitor_merchants=
     s2 = Transactions[cond3&cond4&cond6].groupby('MerchantName')[c].nunique().reset_index()
     s1 = pd.concat([s1,s2], axis=0, ignore_index=True, sort=False).drop_duplicates().sort_values(c, ascending=False).reset_index(drop=True)
     
-    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values), int(s1[s1['MerchantName']==merchant_name][c].values))]
+    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values)+1, int(s1[s1['MerchantName']==merchant_name][c].values))]
     s1 = s1.head(n)
-    rating += [(i,j,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
+    rating += [(i,j+1,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
     
     return rating
     
@@ -232,9 +232,9 @@ def TransactionNumberInSegmentRate(Transactions, merchant_name, competitor_merch
     s2 = Transactions[cond3&cond4&cond6].groupby('MerchantName')[c].count().reset_index()
     s1 = pd.concat([s1,s2], axis=0, ignore_index=True, sort=False).drop_duplicates().sort_values(c, ascending=False).reset_index(drop=True)
     
-    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values), int(s1[s1['MerchantName']==merchant_name][c].values))]
+    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values)+1, int(s1[s1['MerchantName']==merchant_name][c].values))]
     s1 = s1.head(n)
-    rating += [(i,j,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
+    rating += [(i,j+1,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
     
     return rating
 

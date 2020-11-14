@@ -28,7 +28,7 @@ def read_file_columns(path_to_file):
     with open(path_to_file, 'r') as f:
         columns = {line.strip().split()[0]:line.strip().split()[1] for line in f.readlines()}
     
-    columns = {k:np.int32 if v == 'int' else
+    columns = {k:np.int64 if v == 'int' else
                  np.float64 if v == 'float' else 
                  datetime.datetime if v == 'datetime' else 
                  str for k,v in columns.items()}    
@@ -73,12 +73,38 @@ def data_loader(columns, path_to_file=None, reading_parameters={'encoding':'cp12
             cols = list(columns.keys())
             if set(list(df.columns)).intersection(set(cols)) != set(cols):
                 return "Error: can't find needed columns in data"
+                
+            # convert column names from different files to uniform format
+            columns_mapper = {'cnum_':'CNUM',
+                              'cnum':'CNUM',
+                              'married_':'Married',
+                              'merchant_name':'MerchantName',
+                              'mrchname':'MerchantName',
+                              'mrchcity':'MerchantCity',
+                              'amount':'Amount',
+                              'age':'Age',
+                              'gender':'Gender',
+                              'mcc':'MCC',
+                              'purchdate':'Date',
+                              'store_name':'StoreName',
+                              'residenttype':'ResidentType',
+                              'description':'Description',
+                              'categorycode':'ClientCategory'
+                             }
+            cols = [columns_mapper[c] if c in columns_mapper.keys() else c for c in cols]
+            df = df.rename(columns_mapper, axis=1)
+            if 'MCC' in cols:
+                cols = ['MCCCategory' if c == 'category' else c for c in cols]
+                df = df.rename({'category':'MCCCategory'}, axis=1)
+            elif 'Description' in cols:
+                cols = ['ClientCategory' if c == 'category' else c for c in cols]
+                df = df.rename({'category':'ClientCategory'}, axis=1)
             
             return df[cols]
 
 class data_loader_mcc(object):
     def __init__(self):
-        self.columns = {'MCC':np.int32,'CategoryName':str}
+        self.columns = {'MCC':np.int64,'CategoryName':str}
     
     def load_data(self, path_to_file=None, reading_parameters={'encoding':'cp1251', 'sep':',', 'extension':'.csv'}, 
                         db_connection_parameters=None):
@@ -146,7 +172,7 @@ class data_loader_stores(object):
     
 class data_loader_transactions(object):
     def __init__(self):
-        self.columns = {'Date':datetime.datetime,'CNUM':np.int32,'Amount':np.float64,'MerchantName':str,'MCC':np.int32,'MerchantCity':str}
+        self.columns = {'Date':datetime.datetime,'CNUM':np.int64,'Amount':np.float64,'MerchantName':str,'MCC':np.int64,'MerchantCity':str}
     
     def load_data(self, path_to_file=None, reading_parameters={'encoding':'cp1251', 'sep':',', 'extension':'.csv'}, 
                         db_connection_parameters=None):
@@ -186,8 +212,8 @@ class data_loader_transactions(object):
     
 class data_loader_clients(object):
     def __init__(self):
-        self.columns = {'CNUM':np.int32,'Name':str,'Surname':str,'Patronymic':str,'CategoryCode':np.int32,'Gender':str,'Age':np.int32,'Merried':str,
-                        'Email':str,'PhoneNumber':str,'Employer':str,'ResidentType':np.int32}
+        self.columns = {'CNUM':np.int64,'Name':str,'Surname':str,'Patronymic':str,'CategoryCode':np.int64,'Gender':str,'Age':np.int64,'Merried':str,
+                        'Email':str,'PhoneNumber':str,'Employer':str,'ResidentType':np.int64}
     
     def load_data(self, path_to_file=None, reading_parameters={'encoding':'cp1251', 'sep':',', 'extension':'.csv'}, 
                         db_connection_parameters=None):
@@ -255,7 +281,7 @@ class data_loader_client_categories(object):
     
 class data_loader_client_internet_data(object):
     def __init__(self):
-        self.columns = {'CNUM':np.int32}
+        self.columns = {'CNUM':np.int64}
     
     def load_data(self, path_to_file=None, reading_parameters={'encoding':'cp1251', 'sep':',', 'extension':'.csv'}, 
                         db_connection_parameters=None):
@@ -298,23 +324,23 @@ def create_synthetic_data(path_to_file, k=10):
     None
     '''
     
-    cols = {'MCC':np.int32,'CategoryName':str}
+    cols = {'MCC':np.int64,'CategoryName':str}
     pd.DataFrame(generate_random_dict_with_columns(cols, k)).to_csv(path_to_file+'mcc.csv', index=False)
     
     cols = {'MerchantName':str,'StoreName':str}
     pd.DataFrame(generate_random_dict_with_columns(cols, k)).to_csv(path_to_file+'stores.csv', index=False)
     
-    cols = {'Date':datetime.datetime,'CNUM':np.int32,'Amount':np.float64,'MerchantName':str,'MCC':np.int32,'MerchantCity':str}
+    cols = {'Date':datetime.datetime,'CNUM':np.int64,'Amount':np.float64,'MerchantName':str,'MCC':np.int64,'MerchantCity':str}
     pd.DataFrame(generate_random_dict_with_columns(cols, k)).to_csv(path_to_file+'transactions.csv', index=False)
     
-    cols = {'CNUM':np.int32,'Name':str,'Surname':str,'Patronymic':str,'CategoryCode':np.int32,'Gender':str,'Age':np.int32,'Merried':str,
-            'Email':str,'PhoneNumber':str,'Employer':str,'ResidentType':np.int32}
+    cols = {'CNUM':np.int64,'Name':str,'Surname':str,'Patronymic':str,'CategoryCode':np.int64,'Gender':str,'Age':np.int64,'Merried':str,
+            'Email':str,'PhoneNumber':str,'Employer':str,'ResidentType':np.int64}
     pd.DataFrame(generate_random_dict_with_columns(cols, k)).to_csv(path_to_file+'clients.csv', index=False)
     
     cols = {'Category':str,'CategoryName':str}
     pd.DataFrame(generate_random_dict_with_columns(cols, k)).to_csv(path_to_file+'client_categories.csv', index=False)
     
-    cols = {'CNUM':np.int32}
+    cols = {'CNUM':np.int64}
     pd.DataFrame(generate_random_dict_with_columns(cols, k)).to_csv(path_to_file+'client_internet_data.csv', index=False)
     
     
@@ -328,7 +354,7 @@ def generate_random_dict_with_columns(cols, n):
     dict(key=column_name, value=dtype)
     '''
 
-    random_dict = {k:random.choices(range(1,11), k=n) if v == np.int32 else
+    random_dict = {k:random.choices(range(1,11), k=n) if v == np.int64 else
                      np.random.uniform(low=1, high=11, size=(n,)) if v == np.float64 else    
                      [generate_random_datetime() for i in range(n)] if v == datetime.datetime else 
                      random.choices(string.ascii_letters, k=n) for k,v in cols.items()
