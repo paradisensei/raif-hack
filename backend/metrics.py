@@ -9,268 +9,190 @@ from . import tree_utils; reload(tree_utils);
 
 
 
-def NewClientTransactions(Transactions, start_date=None, end_date=None):
+def UniqueClientNumber(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    start_date: datetime.datetime
-    end_date: datetime.datetime
     
     out:
     int
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    Transactions = Transactions[cond1&cond2]
+    return Transactions['CNUM'].unique().shape[0]
+
+def NewClientTransactions(Transactions):
+    '''
+    in:
+    Transactions: pd.DataFrame
+    
+    out:
+    int
+    '''
     
     Transactions = Transactions.groupby('CNUM')['Amount'].count().reset_index()
     Transactions = Transactions[Transactions['Amount']==1]
     
     return Transactions.shape[0]
 
-def ClientAverageBill(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
+def ClientAverageBill(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    merchant_name: str
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
     pd.Series(index=CNUM, data=mean(Amount))
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond3 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    cond4 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
-    Transactions = Transactions[cond1&cond2&cond3&cond4].groupby(['Date'])['Amount'].mean()
-    
-    return Transactions
+    return Transactions.groupby('Date')['Amount'].mean()
 
-def AverageBill(Transactions, start_date=None, end_date=None):
+def AverageBill(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
     float
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    Transactions = Transactions[cond1&cond2]
     n = Transactions['CNUM'].nunique() * 1.0
-    
     return Transactions['Amount'].sum() / n if n != 0 else np.nan
 
-def AverageTransactionNumber(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
+def AverageTransactionNumber(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    merchant_name: str
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
     pd.Series(index=Date, data=count(CNUM)/nunique(CNUM))
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond3 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    cond4 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
+    gr1 = Transactions.groupby('Date')['CNUM'].nunique()
+    gr2 = Transactions.groupby('Date')['CNUM'].count()
     
-    gr1 = Transactions[cond1&cond2&cond3&cond4].groupby('Date')['CNUM'].nunique()
-    gr2 = Transactions[cond1&cond2&cond3&cond4].groupby('Date')['CNUM'].count()
-    
-    #return (gr2 / gr1).sort_index('Date', ascending=True)
     return (gr2 / gr1).sort_index(ascending=True)
 
-def Revenue(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
+def Revenue(Transactions_prev, Transactions_next):
     '''
     in:
-    Transactions: pd.DataFrame
-    merchant_name: str
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
+    Transactions_prev: pd.DataFrame
+    Transactions_next: pd.DataFrame
     
     out:
     pd.Series(index=Date, data=float)
     '''
     
-    cond4 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    Transactions = Transactions[cond4]
-    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] < start_date
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond5 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
-    
-    a = Transactions[cond2&cond3&cond5].groupby('Date')['Amount'].sum()
-    b = Transactions[cond1&cond5].groupby('Date')['Amount'].sum()
+    a = Transactions_next.groupby('Date')['Amount'].sum()
+    b = Transactions_prev.groupby('Date')['Amount'].sum()
     a = ((a-b) / b)*100.0
     
-    #return a.sort_index('Date', ascending=True)
     return a.sort_index(ascending=True)
     
-def RevenueDynamicByDay(Transactions, merchants=None, start_date=None, end_date=None, clients=None):
+def RevenueDynamicByDay(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    merchants: list of str
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
     pd.Series(index=Date, data=float)
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    Transactions = Transactions[cond1]
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond4 = pd.Series(True, index=Transactions.index) if merchants is None else Transactions['MerchantName'].isin(merchants)
-    
-    a = Transactions[cond2&cond3&cond4].groupby('Date')['Amount'].sum()
-    
-    #return a.sort_index('Date', ascending=True)
-    return a.sort_index(ascending=True)
+    return Transactions.groupby('Date')['Amount'].sum()
 
-def IncomeInSegmentRate(Transactions, merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
+def IncomeInSegmentRate(Transactions_store, Transactions_competitors, n):
     '''
     in:
-    Transactions: pd.DataFrame
-    merchant_name: str
-    competitor_merchants: list-like of str
+    Transactions_store: pd.DataFrame
+    Transactions_competitors: pd.DataFrame
     n: int
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
-    list of tuples(int, MerchantName, sum(Amount))
+    list of tuples(int, StoreName, sum(Amount))
     '''
-    
-    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    Transactions = Transactions[cond1]
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] < start_date
-    cond3 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond4 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond5 = Transactions['MerchantName'] == merchant_name
-    cond6 = pd.Series(True, index=Transactions.index) if competitor_merchants is None else Transactions['MerchantName'].isin(competitor_merchants)
     
     c = 'Amount'
-    s1 = Transactions[cond3&cond4&cond5].groupby('MerchantName')[c].sum().reset_index()
-    s2 = Transactions[cond3&cond4&cond6].groupby('MerchantName')[c].sum().reset_index()
+    f = 'StoreName'
+    store_name = Transactions_store[f].unique()[0]
+    
+    s1 = Transactions_store.groupby(f)[c].sum().reset_index()
+    s2 = Transactions_competitors.groupby(f)[c].sum().reset_index()
     s1 = pd.concat([s1,s2], axis=0, ignore_index=True, sort=False).drop_duplicates().sort_values(c, ascending=False).reset_index(drop=True)
     
-    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values)+1, int(s1[s1['MerchantName']==merchant_name][c].values))]
+    rating = [(store_name, int(s1[s1[f]==store_name].index.values)+1, int(s1[s1[f]==store_name][c].values))]
     s1 = s1.head(n)
-    rating += [(i,j+1,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
+    rating += [(i,j+1,k) for i,j,k in zip(s1[f].values, s1.index, s1[c].values)]
     
     return rating
 
-def ClientNumberInSegmentRate(Transactions, merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
+def ClientNumberInSegmentRate(Transactions_store, Transactions_competitors, n):
     '''
     in:
-    Transactions: pd.DataFrame
-    merchant_name: str
-    competitor_merchants: list-like of str
+    Transactions_store: pd.DataFrame
+    Transactions_competitors: pd.DataFrame
     n: int
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
-    list of tuples(int, MerchantName, nunique(CNUM))
+    list of tuples(int, StoreName, nunique(CNUM))
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    Transactions = Transactions[cond1]
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] < start_date
-    cond3 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond4 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond5 = Transactions['MerchantName'] == merchant_name
-    cond6 = pd.Series(True, index=Transactions.index) if competitor_merchants is None else Transactions['MerchantName'].isin(competitor_merchants)
-    
     c = 'CNUM'
-    s1 = Transactions[cond3&cond4&cond5].groupby('MerchantName')[c].nunique().reset_index()
-    s2 = Transactions[cond3&cond4&cond6].groupby('MerchantName')[c].nunique().reset_index()
+    f = 'StoreName'
+    store_name = Transactions_store[f].unique()[0]
+    
+    s1 = Transactions_store.groupby(f)[c].nunique().reset_index()
+    s2 = Transactions_competitors.groupby(f)[c].nunique().reset_index()
     s1 = pd.concat([s1,s2], axis=0, ignore_index=True, sort=False).drop_duplicates().sort_values(c, ascending=False).reset_index(drop=True)
     
-    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values)+1, int(s1[s1['MerchantName']==merchant_name][c].values))]
+    rating = [(store_name, int(s1[s1[f]==store_name].index.values)+1, int(s1[s1[f]==store_name][c].values))]
     s1 = s1.head(n)
-    rating += [(i,j+1,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
+    rating += [(i,j+1,k) for i,j,k in zip(s1[f].values, s1.index, s1[c].values)]
     
     return rating
     
-def TransactionNumberInSegmentRate(Transactions, merchant_name, competitor_merchants=None, n=5, start_date=None, end_date=None, clients=None):
+def TransactionNumberInSegmentRate(Transactions_store, Transactions_competitors, n):
     '''
     in:
-    Transactions: pd.DataFrame
-    merchant_name: str
-    competitor_merchants: list-like of str
+    Transactions_store: pd.DataFrame
+    Transactions_competitors: pd.DataFrame
     n: int
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    cliets: list-like
     
     out:
-    list of tuples(int, MerchantName, count(CNUM))
+    list of tuples(int, StoreName, count(CNUM))
     '''
     
-    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    Transactions = Transactions[cond1]
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] < start_date
-    cond3 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond4 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond5 = Transactions['MerchantName'] == merchant_name
-    cond6 = pd.Series(True, index=Transactions.index) if competitor_merchants is None else Transactions['MerchantName'].isin(competitor_merchants)
-    
     c = 'CNUM'
-    s1 = Transactions[cond3&cond4&cond5].groupby('MerchantName')[c].count().reset_index()
-    s2 = Transactions[cond3&cond4&cond6].groupby('MerchantName')[c].count().reset_index()
+    f = 'StoreName'
+    store_name = Transactions_store[f].unique()[0]
+    
+    s1 = Transactions_store.groupby(f)[c].count().reset_index()
+    s2 = Transactions_competitors.groupby(f)[c].count().reset_index()
     s1 = pd.concat([s1,s2], axis=0, ignore_index=True, sort=False).drop_duplicates().sort_values(c, ascending=False).reset_index(drop=True)
     
-    rating = [(merchant_name, int(s1[s1['MerchantName']==merchant_name].index.values)+1, int(s1[s1['MerchantName']==merchant_name][c].values))]
+    rating = [(store_name, int(s1[s1[f]==store_name].index.values)+1, int(s1[s1[f]==store_name][c].values))]
     s1 = s1.head(n)
-    rating += [(i,j+1,k) for i,j,k in zip(s1['MerchantName'].values, s1.index, s1[c].values)]
+    rating += [(i,j+1,k) for i,j,k in zip(s1[f].values, s1.index, s1[c].values)]
     
     return rating
 
-def Gender(Transactions, Clients):
+def Gender(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    Clients: pd.DataFrame
     
     out:
     pd.Series(index=Gender, data=value_counts(normalize=True))
     '''
     
-    Transactions = pd.merge(Transactions, Clients[['CNUM','Gender']], how='inner', on='CNUM')
-    
     return Transactions['Gender'].value_counts(normalize=True)
 
-def Age(Transactions, Clients):
+def Age(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    Clients: pd.DataFrame
     
     out:
     pd.Series(index=Age_group, data=value_counts(normalize=True))
     '''
     
-    Transactions = pd.merge(Transactions, Clients[['CNUM','Age']], how='inner', on='CNUM')
     Transactions['Age_group'] = Transactions['Age'].apply(lambda x: '0-20' if x<=20 else
                                                                     '20-30' if x<=30 else
                                                                     '30-40' if x<=40 else
@@ -281,54 +203,38 @@ def Age(Transactions, Clients):
     
     return Transactions['Age_group'].value_counts(normalize=True)
     
-def AmountByGender(Transactions, Clients, f=np.sum):
+def AmountByGender(Transactions, f=np.sum):
     '''
     in:
     Transactions: pd.DataFrame
-    Clients: pd.DataFrame
     f: object
     
     out:
     pd.Series(index=Gender, data=f(Amount))
     '''
-    
-    Transactions = pd.merge(Transactions, Clients[['CNUM','Gender']], how='inner', on='CNUM')
     
     return Transactions.groupby('Gender')['Amount'].agg([f])
 
-def AverageBillByAge(Transactions, Clients, f=np.mean):
+def AverageBillByAge(Transactions, f=np.mean):
     '''
     in:
     Transactions: pd.DataFrame
-    Clients: pd.DataFrame
     f: object
     
     out:
-    pd.Series(index=Gender, data=f(Amount))
+    pd.Series(index=Age, data=f(Amount))
     '''
-    
-    Transactions = pd.merge(Transactions, Clients[['CNUM','Age']], how='inner', on='CNUM')
     
     return Transactions.groupby('Age')['Amount'].agg([f])
 
-def LTV(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
+def LTV(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    merchant_name: str
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    clients: list-like
     
     out:
     pd.Series(index=CNUM, data=LTV)
     '''
-    
-    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond4 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
-    Transactions = Transactions[cond1&cond2&cond3&cond4]
     
     #lifespan = (Transactions.groupby("CNUM")['Date'].max() - Transactions.groupby("CNUM")['Date'].min()).apply(lambda x: x.days)
     #lifespan = lifespan * 1.0 / 365
@@ -339,24 +245,14 @@ def LTV(Transactions, merchant_name=None, start_date=None, end_date=None, client
     
     return ltv
 
-def Retention(Transactions, merchant_name=None, start_date=None, end_date=None, clients=None):
+def Retention(Transactions):
     '''
     in:
     Transactions: pd.DataFrame
-    merchant_name: str
-    start_date: datetime.datetime
-    end_date: datetime.datetime
-    clients: list-like
     
     out:
     pd.DataFrame
     '''
-    
-    cond1 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
-    cond2 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
-    cond3 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
-    cond4 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
-    Transactions = Transactions[cond1&cond2&cond3&cond4]
     
     Transactions['transaction_month'] = Transactions['Date'].dt.to_period('M')
     Transactions['cohort'] = Transactions.groupby('CNUM')['Date'].transform('min').dt.to_period('M')
@@ -366,7 +262,7 @@ def Retention(Transactions, merchant_name=None, start_date=None, end_date=None, 
     Transactions['period_number'] = (Transactions['transaction_month'] - Transactions['cohort']) #.apply(attrgetter('n'))
     
     cohort_pivot = Transactions.pivot_table(index='cohort', columns='period_number', values='n_customers')
-    del Transactions
+    #del Transactions
 
     cohort_size = cohort_pivot.iloc[:,0]
     retention_matrix = cohort_pivot.divide(cohort_size, axis=0)
