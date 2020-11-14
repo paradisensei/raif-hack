@@ -11,7 +11,7 @@ def avg_ltv(ltv):
 
 def gender_graph(gender) -> str:
     count = gender.size
-    background_color = [random_hex_color() for _ in range(count)]
+    background_color = ['#4e73df', '#1cc88a', '#36b9cc']
 
     graph_data = {
         'type': 'doughnut',
@@ -20,14 +20,19 @@ def gender_graph(gender) -> str:
             'datasets': [{
                 'label': '',
                 'data': list(gender.values.reshape(-1)),
-                # 'backgroundColor': ['#4e73df', '#1cc88a', '#36b9cc'],
-                'backgroundColor': background_color,
+                'backgroundColor': background_color[:count],
                 'borderColor': ['#ffffff'] * count
             }],
         },
         'options': {
             'maintainAspectRatio': False,
-            'legend': {'display': False, 'title': {}}
+            'legend': {
+                'position':'bottom', 
+                'labels': {
+                    'pointStyle': 'circle',
+                    'usePointStyle': True
+                }
+            }
         }
     }
 
@@ -51,7 +56,13 @@ def age_graph(age) -> str:
         },
         'options': {
             'maintainAspectRatio': False,
-            'legend': {'display': False, 'title': {}}
+            'legend': {
+                'position':'bottom', 
+                'labels': {
+                    'pointStyle': 'circle',
+                    'usePointStyle': True
+                }
+            }
         }
     }
 
@@ -61,7 +72,7 @@ def avg_bill_graph(avg_bill) -> str:
     graph_data = {
         'type': 'line',
         'data': {
-            'labels': list(map(lambda i: i[1].strftime('%Y-%m-%d'), list(avg_bill.index.values))),
+            'labels': list(map(lambda i: i.astype(str)[:10], list(avg_bill.index.values))),
             'datasets': [{
                 'label': 'Earnings',
                 'fill': True,
@@ -167,3 +178,10 @@ def income_in_segment(income_in_segment):
     bar_colors = ['bg-warning', 'bg-primary', 'bg-info', 'bg-success', 'bg-default']
     income_in_segment = list(map(lambda iis: (iis[0], round((iis[2]/max_income_in_segment)*100), iis[2], bar_colors[iis[1]-1]), income_in_segment))
     return income_in_segment
+
+def clients_in_segment(clients_in_segment):
+    max_clients_in_segment = max(list(map(lambda cis: cis[2], clients_in_segment)))
+
+    bar_colors = ['bg-warning', 'bg-primary', 'bg-info', 'bg-success', 'bg-default']
+    clients_in_segment = list(map(lambda cis: (cis[0], round((cis[2]/max_clients_in_segment)*100), cis[2], bar_colors[cis[1]-1]), clients_in_segment))
+    return clients_in_segment

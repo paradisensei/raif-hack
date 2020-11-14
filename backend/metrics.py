@@ -46,7 +46,7 @@ def ClientAverageBill(Transactions, merchant_name=None, start_date=None, end_dat
     cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
     cond3 = pd.Series(True, index=Transactions.index) if clients is None else Transactions['CNUM'].isin(clients)
     cond4 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
-    Transactions = Transactions[cond1&cond2&cond3&cond4].groupby(['CNUM','Date'])['Amount'].mean()
+    Transactions = Transactions[cond1&cond2&cond3&cond4].groupby(['Date'])['Amount'].mean()
     
     return Transactions
 

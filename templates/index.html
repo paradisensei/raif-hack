@@ -234,13 +234,8 @@
                                 <div class="chart-area">
                                     <canvas data-bs-chart="{{gender}}"></canvas>
                                 </div>
-                                <!-- <div class="text-center small mt-4">
-                                    <span class="mr-2"><i class="fas fa-circle text-primary"></i>&nbsp;Direct</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-success"></i>&nbsp;Social</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-info"></i>&nbsp;Refferal</span>
-                                </div> -->
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
                 <div class="row">
@@ -275,13 +270,8 @@
                                 <div class="chart-area">
                                     <canvas data-bs-chart="{{age}}"></canvas>
                                 </div>
-                                <!-- <div class="text-center small mt-4">
-                                    <span class="mr-2"><i class="fas fa-circle text-primary"></i>&nbsp;Direct</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-success"></i>&nbsp;Social</span>
-                                    <span class="mr-2"><i class="fas fa-circle text-info"></i>&nbsp;Refferal</span>
-                                </div> -->
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
             <div class="row">
@@ -306,90 +296,26 @@
                             {% endfor %}
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-6 mb-4">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="text-primary font-weight-bold m-0">Todo List</h6>
+                            <h6 class="text-primary font-weight-bold m-0">Рейтинг по числу клиентов среди конкурентов в сегменте</h6>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col mr-2">
-                                        <h6 class="mb-0"><strong>Lunch meeting</strong></h6><span class="text-xs">10:30 AM</span></div>
-                                    <div class="col-auto">
-                                        <div class="custom-control custom-checkbox"><input class="custom-control-input" type="checkbox" id="formCheck-1"><label class="custom-control-label" for="formCheck-1"></label></div>
+                        <div class="card-body">
+                            {% for cis in clients_in_segment %}
+                                {% if cis[0]==merchant %}
+                                    <h4 class="small font-weight-bold">ВЫ ({{cis[0]}})<span class="float-right">{{cis[2]}}</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-danger" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{cis[1]}}%;"><span class="sr-only">20%</span></div>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col mr-2">
-                                        <h6 class="mb-0"><strong>Lunch meeting</strong></h6><span class="text-xs">11:30 AM</span></div>
-                                    <div class="col-auto">
-                                        <div class="custom-control custom-checkbox"><input class="custom-control-input" type="checkbox" id="formCheck-2"><label class="custom-control-label" for="formCheck-2"></label></div>
+                                {% else %}
+                                    <h4 class="small">{{cis[0]}}<span class="float-right">{{cis[2]}}</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar {{cis[3]}}" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: {{cis[1]}}%;"><span class="sr-only">20%</span></div>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="row align-items-center no-gutters">
-                                    <div class="col mr-2">
-                                        <h6 class="mb-0"><strong>Lunch meeting</strong></h6><span class="text-xs">12:30 AM</span></div>
-                                    <div class="col-auto">
-                                        <div class="custom-control custom-checkbox"><input class="custom-control-input" type="checkbox" id="formCheck-3"><label class="custom-control-label" for="formCheck-3"></label></div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col-lg-6 mb-4">
-                            <div class="card text-white bg-primary shadow">
-                                <div class="card-body">
-                                    <p class="m-0">Primary</p>
-                                    <p class="text-white-50 small m-0">#4e73df</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-4">
-                            <div class="card text-white bg-success shadow">
-                                <div class="card-body">
-                                    <p class="m-0">Success</p>
-                                    <p class="text-white-50 small m-0">#1cc88a</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-4">
-                            <div class="card text-white bg-info shadow">
-                                <div class="card-body">
-                                    <p class="m-0">Info</p>
-                                    <p class="text-white-50 small m-0">#36b9cc</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-4">
-                            <div class="card text-white bg-warning shadow">
-                                <div class="card-body">
-                                    <p class="m-0">Warning</p>
-                                    <p class="text-white-50 small m-0">#f6c23e</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-4">
-                            <div class="card text-white bg-danger shadow">
-                                <div class="card-body">
-                                    <p class="m-0">Danger</p>
-                                    <p class="text-white-50 small m-0">#e74a3b</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 mb-4">
-                            <div class="card text-white bg-secondary shadow">
-                                <div class="card-body">
-                                    <p class="m-0">Secondary</p>
-                                    <p class="text-white-50 small m-0">#858796</p>
-                                </div>
-                            </div>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -398,7 +324,7 @@
     </div>
     <footer class="bg-white sticky-footer">
         <div class="container my-auto">
-            <div class="text-center my-auto copyright"><span>Copyright © Brand 2020</span></div>
+            <div class="text-center my-auto copyright"><span>Copyright © RAIF 2020</span></div>
         </div>
     </footer>
     </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a></div>

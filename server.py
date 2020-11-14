@@ -27,13 +27,13 @@ def dashboard() -> 'html':
     gender = metric_buttons.button_Gender()
     age = metric_buttons.button_Age()
 
-    # value-graph metrics
+    # # value-graph metrics
     client_avg_bill = metric_buttons.button_ClientAverageBill()
     client_avg_tx = metric_buttons.button_AverageTransactionNumber()
 
-    # rating-graph metrics
+    # # rating-graph metrics
     income_in_segment = metric_buttons.button_IncomeInSegmentRate(merchant)[1:]
-    # clients_in_segment = metric_buttons.button_ClientNumberInSegmentRate(merchant)
+    clients_in_segment = metric_buttons.button_ClientNumberInSegmentRate(merchant)[1:]
 
     return render_template(
         'index.html',
@@ -45,6 +45,7 @@ def dashboard() -> 'html':
         client_avg_bill=util.avg_bill_graph(client_avg_bill),
         client_avg_tx=util.avg_tx_graph(client_avg_tx),
         income_in_segment=util.income_in_segment(income_in_segment),
+        clients_in_segment=util.clients_in_segment(clients_in_segment),
     )
 
 if __name__ == "__main__":
