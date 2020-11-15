@@ -128,7 +128,7 @@ def get_most_probable_regression_tree_paths(model, feature_names, n=5):
     paths = paths.sort_values(by='revenue', ascending=False).rename({'path':'segment'}, axis=1).reset_index(drop=True)
     
     paths = paths.head(n)
-    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.5','Женщина').replace('gender > 0.5','Мужчина').replace('code <= 0.5','VIP').replace('code > 0.5','Не VIP').replace('code <= 1.5','Премиальный').replace('code > 1.5','Не премиальный').replace('married <= 0.5','Женат/замужем').replace('married > 0.5','Неженат/незамужем'))
+    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.5','Женщина').replace('gender > 0.5','Мужчина').replace('code <= 0.5','Корпоративный клиент').replace('code > 0.5','Не корпоративный клиент').replace('code <= 1.5','Regular client').replace('code > 1.5','Не regular client').replace('married <= 0.5','Женат/замужем').replace('married > 0.5','Неженат/незамужем'))
     
     return paths[['segment','revenue']]
 
@@ -140,7 +140,7 @@ def get_most_probable_regression_ensemble_paths(model, feature_names, n=5):
     paths = paths.sort_values(by='revenue', ascending=False).rename({'path':'segment'}, axis=1).reset_index(drop=True)
     
     paths = paths.head(n)
-    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.5','Женщина').replace('gender > 0.5','Мужчина').replace('code <= 0.5','VIP').replace('code > 0.5','Не VIP').replace('code <= 1.5','Премиальный').replace('code > 1.5','Не премиальный').replace('married <= 0.5','Женат/замужем').replace('married > 0.5','Неженат/незамужем'))
+    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.5','Женщина').replace('gender > 0.5','Мужчина').replace('code <= 0.5','Корпоративный клиент').replace('code > 0.5','Не корпоративный клиент').replace('code <= 1.5','Regular client').replace('code > 1.5','Не regular client').replace('married <= 0.5','Женат/замужем').replace('married > 0.5','Неженат/незамужем'))
     
     return paths[['segment','revenue']]
     
