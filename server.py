@@ -60,7 +60,7 @@ def dashboard() -> 'html':
     gender = metric_buttons.button_Gender(Transactions, Clients, Stores, store)
     age = metric_buttons.button_Age(Transactions, Clients, Stores, store)
 
-    # # value-graph metrics
+    # value-graph metrics
     client_avg_bill = metric_buttons.button_ClientAverageBill(Transactions, Stores, store, start_date=start_date, end_date=end_date)
     client_avg_tx = metric_buttons.button_AverageTransactionNumber(Transactions, Stores, store, start_date=start_date, end_date=end_date)
     client_revenue = metric_buttons.button_RevenueDynamicByDay(Transactions, Stores, store, start_date=start_date, end_date=end_date)
@@ -78,7 +78,9 @@ def dashboard() -> 'html':
         client_revenue=util.revenue_graph(client_revenue),
         income_in_segment=income_in_segment,
         clients_in_segment=clients_in_segment,
-        tx_in_segment=tx_in_segment
+        tx_in_segment=tx_in_segment,
+        top_client_segments=top_client_segments,
+        top_churn_segments=top_churn_segments,
     )
 
 
@@ -106,5 +108,9 @@ if __name__ == "__main__":
     income_in_segment = util.income_in_segment(metric_buttons.button_IncomeInSegmentRate(Transactions, Stores, s)[1:])
     clients_in_segment = util.clients_in_segment(metric_buttons.button_ClientNumberInSegmentRate(Transactions, Stores, s)[1:])
     tx_in_segment = util.tx_in_segment(metric_buttons.button_TransactionNumberInSegmentRate(Transactions, Stores, s)[1:])
+
+    # pre-calculate ml metrics
+    top_client_segments = util.top_client_segments(metric_buttons.button_MostPayableSegments(fp_model, fp_model_features))
+    top_churn_segments = util.top_churn_segments(metric_buttons.button_ChurnSegments(churn_model, churn_model_features))
 
     app.run(debug=True)

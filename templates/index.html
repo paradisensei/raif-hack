@@ -355,6 +355,62 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-6 col-xl-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 font-weight-bold">Топ наиболее платежеспособных клиентских сегментов</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table dataTable my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Сегмент</th>
+                                            <th>Выручка</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cs in top_client_segments %}
+                                            <tr>
+                                                <td>{{ cs[0] }}</td>
+                                                <td>{{ cs[1] }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xl-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 font-weight-bold">Клиентские сегменты с наибольшим оттоком</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table dataTable my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Сегмент</th>
+                                            <th>Отток (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cs in top_churn_segments %}
+                                            <tr>
+                                                <td>{{ cs[0] }}</td>
+                                                <td>{{ cs[1] }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <footer class="bg-white sticky-footer">
