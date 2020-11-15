@@ -39,8 +39,10 @@ def gender_graph(gender) -> str:
     return json.dumps(graph_data)
 
 def age_graph(age) -> str:
+    age.sort_index(inplace=True)
+    print(age)
     count = age.size
-    background_color = [random_hex_color() for _ in range(count)]
+    background_color = ['#f6c23e', '#e74a3b', '#4e73df', '#1cc88a', '#36b9cc']
 
     graph_data = {
         'type': 'doughnut',
@@ -49,8 +51,7 @@ def age_graph(age) -> str:
             'datasets': [{
                 'label': '',
                 'data': list(age.values.reshape(-1)),
-                # 'backgroundColor': ['#4e73df', '#1cc88a', '#36b9cc'],
-                'backgroundColor': background_color,
+                'backgroundColor': background_color[:count],
                 'borderColor': ['#ffffff'] * count
             }],
         },

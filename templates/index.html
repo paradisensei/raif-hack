@@ -255,16 +255,10 @@
                     <div class="col-lg-7 col-xl-8">
                         <div class="card shadow mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="text-primary font-weight-bold m-0">Среднее кол-во транзакций клиентов</h6>
-                                <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in"
-                                        role="menu">
-                                        <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" role="presentation" href="#">&nbsp;Action</a><a class="dropdown-item" role="presentation" href="#">&nbsp;Another action</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="#">&nbsp;Something else here</a></div>
-                                </div>
+                                <h6 class="text-primary font-weight-bold m-0">Динамика выручки</h6>
                             </div>
                             <div class="card-body">
-                                <div class="chart-area"><canvas data-bs-chart="{{client_avg_tx}}"></canvas></div>
+                                <div class="chart-area"><canvas data-bs-chart="{{client_revenue}}"></canvas></div>
                             </div>
                         </div>
                     </div>
@@ -272,12 +266,6 @@
                         <div class="card shadow mb-4">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h6 class="text-primary font-weight-bold m-0">Распределение клиентов по возрасту</h6>
-                                <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button"><i class="fas fa-ellipsis-v text-gray-400"></i></button>
-                                    <div class="dropdown-menu shadow dropdown-menu-right animated--fade-in"
-                                        role="menu">
-                                        <p class="text-center dropdown-header">dropdown header:</p><a class="dropdown-item" role="presentation" href="#">&nbsp;Action</a><a class="dropdown-item" role="presentation" href="#">&nbsp;Another action</a>
-                                        <div class="dropdown-divider"></div><a class="dropdown-item" role="presentation" href="#">&nbsp;Something else here</a></div>
-                                </div>
                             </div>
                             <div class="card-body">
                                 <div class="chart-area">
@@ -291,10 +279,10 @@
                 <div class="col-lg-6 col-xl-6">
                     <div class="card shadow mb-4">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h6 class="text-primary font-weight-bold m-0">Динамика выручки</h6>
+                            <h6 class="text-primary font-weight-bold m-0">Среднее кол-во транзакций клиентов</h6>
                         </div>
                         <div class="card-body">
-                            <div class="chart-area"><canvas data-bs-chart="{{client_revenue}}"></canvas></div>
+                            <div class="chart-area"><canvas data-bs-chart="{{client_avg_tx}}"></canvas></div>
                         </div>
                     </div>
                 </div>

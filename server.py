@@ -47,23 +47,18 @@ def dashboard() -> 'html':
         end_date = datetime.strptime(end_date, '%Y-%m-%d').strftime('%Y-%m-%dT%H:%M:%S.%f')
 
     # single-valued metrics
-    avg_bill = round(metric_buttons.button_AverageBill(Transactions, Stores, start_date=start_date, end_date=end_date))
-    ltv = metric_buttons.button_LTV(Transactions, Stores, start_date=start_date, end_date=end_date)
-    client_count = metric_buttons.button_UniqueClientNumber(Transactions, Stores, start_date=start_date, end_date=end_date)
+    avg_bill = round(metric_buttons.button_AverageBill(Transactions, Stores, store, start_date=start_date, end_date=end_date))
+    ltv = metric_buttons.button_LTV(Transactions, Stores, store, start_date=start_date, end_date=end_date)
+    client_count = metric_buttons.button_UniqueClientNumber(Transactions, Stores, store, start_date=start_date, end_date=end_date)
 
     # doughnut-graph metrics
-    gender = metric_buttons.button_Gender(Transactions, Clients, Stores)
-    age = metric_buttons.button_Age(Transactions, Clients, Stores)
+    gender = metric_buttons.button_Gender(Transactions, Clients, Stores, store)
+    age = metric_buttons.button_Age(Transactions, Clients, Stores, store)
 
     # # value-graph metrics
-    client_avg_bill = metric_buttons.button_ClientAverageBill(Transactions, Stores, start_date=start_date, end_date=end_date)
-    client_avg_tx = metric_buttons.button_AverageTransactionNumber(Transactions, Stores, start_date=start_date, end_date=end_date)
-    client_revenue = metric_buttons.button_RevenueDynamicByDay(Transactions, Stores, start_date=start_date, end_date=end_date)
-
-    # # rating-graph metrics
-    income_in_segment = metric_buttons.button_IncomeInSegmentRate(Transactions, Stores, store, start_date=start_date, end_date=end_date)[1:]
-    clients_in_segment = metric_buttons.button_ClientNumberInSegmentRate(Transactions, Stores, store, start_date=start_date, end_date=end_date)[1:]
-    tx_in_segment = metric_buttons.button_TransactionNumberInSegmentRate(Transactions, Stores, store, start_date=start_date, end_date=end_date)[1:]
+    client_avg_bill = metric_buttons.button_ClientAverageBill(Transactions, Stores, store, start_date=start_date, end_date=end_date)
+    client_avg_tx = metric_buttons.button_AverageTransactionNumber(Transactions, Stores, store, start_date=start_date, end_date=end_date)
+    client_revenue = metric_buttons.button_RevenueDynamicByDay(Transactions, Stores, store, start_date=start_date, end_date=end_date)
 
     return render_template(
         'index.html',
@@ -76,10 +71,11 @@ def dashboard() -> 'html':
         client_avg_bill=util.avg_bill_graph(client_avg_bill),
         client_avg_tx=util.avg_tx_graph(client_avg_tx),
         client_revenue=util.revenue_graph(client_revenue),
-        income_in_segment=util.income_in_segment(income_in_segment),
-        clients_in_segment=util.clients_in_segment(clients_in_segment),
-        tx_in_segment=util.tx_in_segment(tx_in_segment)
+        income_in_segment=income_in_segment,
+        clients_in_segment=clients_in_segment,
+        tx_in_segment=tx_in_segment
     )
+
 
 if __name__ == "__main__":
     params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
@@ -93,5 +89,11 @@ if __name__ == "__main__":
     params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     Clients = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
+
+    # pre-calculate rating-graph metrics
+    s = 'Fix Price'
+    income_in_segment = util.income_in_segment(metric_buttons.button_IncomeInSegmentRate(Transactions, Stores, s)[1:])
+    clients_in_segment = util.clients_in_segment(metric_buttons.button_ClientNumberInSegmentRate(Transactions, Stores, s)[1:])
+    tx_in_segment = util.tx_in_segment(metric_buttons.button_TransactionNumberInSegmentRate(Transactions, Stores, s)[1:])
 
     app.run(debug=True)
