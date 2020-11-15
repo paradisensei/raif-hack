@@ -55,6 +55,7 @@ def dashboard() -> 'html':
     avg_bill = round(metric_buttons.button_AverageBill(Transactions, Stores, store, start_date=start_date, end_date=end_date))
     ltv = metric_buttons.button_LTV(Transactions, Stores, store, start_date=start_date, end_date=end_date)
     client_count = metric_buttons.button_UniqueClientNumber(Transactions, Stores, store, start_date=start_date, end_date=end_date)
+    competitors_count = metric_buttons.button_CompetitorsNumber(Transactions, Stores, start_date=start_date, end_date=end_date)
 
     # doughnut-graph metrics
     gender = metric_buttons.button_Gender(Transactions, Clients, Stores, store)
@@ -71,6 +72,7 @@ def dashboard() -> 'html':
         avg_ltv=util.avg_ltv(ltv),
         avg_bill=avg_bill,
         client_count=client_count,
+        competitors_count=competitors_count,
         gender=util.gender_graph(gender),
         age=util.age_graph(age),
         client_avg_bill=util.avg_bill_graph(client_avg_bill),

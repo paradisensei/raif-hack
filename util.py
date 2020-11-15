@@ -253,7 +253,6 @@ def top_client_segments(top_client_segments):
     return [(segments[i], round(revenue[i])) for i in range(len(segments))]
 
 def top_churn_segments(top_churn_segments):
-    print(top_churn_segments)
     segments = top_churn_segments['segment'].tolist()
     churn = top_churn_segments['class_1_proba'].tolist()
     return [(segments[i], round(float(churn[i])*100)) for i in range(len(segments))]
