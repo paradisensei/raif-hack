@@ -44,28 +44,28 @@ def get_classification_tree_paths(tree, feature_names):
             name = feature_name[node]
             threshold = tree_.threshold[node]
             
-            path_l += ' ' + "{} {} <= {};".format(indent, name, threshold)
+            path_l += ' ' + "{} {} <= {:.2f};".format(indent, name, threshold)
             path_l += ' ' + str(recurse(tree_.children_left[node], depth + 1, path_l, path_l, paths))
             #print(path_l)
             paths.append(path_l)
             
-            path_r += ' ' + "{} {} > {};".format(indent, name, threshold)
+            path_r += ' ' + "{} {} > {:.2f};".format(indent, name, threshold)
             path_r += ' ' + str(recurse(tree_.children_right[node], depth + 1, path_r, path_r, paths))
             #print(path_r)
             paths.append(path_r)
         else:
-            #r1 = "{}return {}".format(indent, tree_.value[node])
+            r1 = "{}return {}".format(indent, tree_.value[node])
             r2 = tree_.value[node]
             leaf_support = r2[0][0]+r2[0][1]
             class_1_proba = 1.0 * r2[0][1] / leaf_support 
-            # r1+indent+str(r2[0][0])+indent+str(r2[0][1])+indent+str(leaf_support)+indent+str(class_1_proba)
-            return str(r2[0][0])+indent+str(r2[0][1])+indent+str(leaf_support)+indent+str(class_1_proba)
+            return r1+indent+str(r2[0][0])+indent+str(r2[0][1])+indent+str(leaf_support)+indent+str(class_1_proba)
+            #return str(r2[0][0])+indent+str(r2[0][1])+indent+str(leaf_support)+indent+str(class_1_proba)
 
     paths = []
     _ = recurse(0, 1, '', '', paths)
     
     paths = [p.strip().split('\t') for p in paths if len(p.strip().split('\t')) > 1]
-    paths = [[' '.join(p[:-4])]+[' '.join(p[:-5])+' return '+str(p[-1])]+p[-4:] for p in paths]
+    paths = [[' '.join(p[:-4]).strip()]+[' '.join(p[:-5]).strip()]+p[-4:] for p in paths]
     
     return paths
 

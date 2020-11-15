@@ -95,8 +95,8 @@ if __name__ == "__main__":
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     Clients = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
     
-    #churn_model = data_handling.load_from_pickle(PATH_TO_CHURN_MODEL)
-    #churn_model_features = data_handling.load_from_pickle(PATH_TO_CHURN_MODEL_FEATURES)
+    churn_model = data_handling.load_from_pickle(PATH_TO_CHURN_MODEL)
+    churn_model_features = data_handling.load_from_pickle(PATH_TO_CHURN_MODEL_FEATURES)
     
     fp_model = data_handling.load_from_pickle(PATH_TO_FP_MODEL)
     fp_model_features = data_handling.load_from_pickle(PATH_TO_FP_MODEL_FEATURES)

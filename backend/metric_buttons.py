@@ -431,7 +431,7 @@ def button_MostPayableSegments(model, feature_names, n=5):
     pd.DataFrame
     '''
     
-    return MostPayableSegments(model, feature_names, n)
+    return metrics.MostPayableSegments(model, feature_names, n)
     
 def button_ChurnSegments(model, feature_names, n=5):
     '''
@@ -444,6 +444,6 @@ def button_ChurnSegments(model, feature_names, n=5):
     pd.DataFrame
     '''
     
-    return ChurnSegments(model, feature_names, n)
+    return metrics.ChurnSegments(model, feature_names, n)
     
     
