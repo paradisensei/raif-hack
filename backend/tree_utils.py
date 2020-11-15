@@ -73,7 +73,11 @@ def get_most_probable_classification_tree_paths(tree, feature_names, n=5):
     paths = get_classification_tree_paths(tree, feature_names)
     paths = pd.DataFrame(paths, columns=['s0','segment','class_0_support','class_1_support','leaf_support','class_1_proba'])
     paths = paths.sort_values(['class_1_proba','leaf_support'], ascending=[False,False])
-    return paths.head(n)[['segment','class_1_proba']]
+    
+    paths = paths.head(n)
+    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.50','Женщина').replace('gender > 0.50','Мужчина').replace('married <= 0.50','Неженат/незамужем').replace('married > 0.50','Женат/замужем').replace('days_since_last_order','Дней с посл-й покупки').replace('order_sum','Кол-во заказов'))
+    
+    return paths[['segment','class_1_proba']]
 
 def get_most_probable_classification_ensemble_paths(model, feature_names, n=5):
     paths = []
@@ -83,7 +87,10 @@ def get_most_probable_classification_ensemble_paths(model, feature_names, n=5):
     paths = pd.DataFrame(paths, columns=['s0','segment','class_0_support','class_1_support','leaf_support','class_1_proba'])
     paths = paths.drop_duplicates().sort_values(['class_1_proba','leaf_support'], ascending=[False,False]).reset_index(drop=True)
     
-    return paths.head(n)[['segment','class_1_proba']]
+    paths = paths.head(n)
+    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.50','Женщина').replace('gender > 0.50','Мужчина').replace('married <= 0.50','Неженат/незамужем').replace('married > 0.50','Женат/замужем').replace('days_since_last_order','Дней с посл-й покупки').replace('order_sum','Кол-во заказов'))
+    
+    return paths[['segment','class_1_proba']]
     
 def get_regression_tree_paths(model, feature_names):
     global value_data
@@ -117,15 +124,23 @@ def get_regression_tree_paths(model, feature_names):
     return value_data
 
 def get_most_probable_regression_tree_paths(model, feature_names, n=5):
-    paths = get_regression_tree_paths(model, feature_names)[['path','revenue']]
+    paths = get_regression_tree_paths(model, feature_names)
     paths = paths.sort_values(by='revenue', ascending=False).rename({'path':'segment'}, axis=1).reset_index(drop=True)
-    return paths.head(n)
+    
+    paths = paths.head(n)
+    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.5','Женщина').replace('gender > 0.5','Мужчина').replace('code <= 0.5','VIP').replace('code > 0.5','Не VIP').replace('code <= 1.5','Премиальный').replace('code > 1.5','Не премиальный').replace('married <= 0.5','Женат/замужем').replace('married > 0.5','Неженат/незамужем'))
+    
+    return paths[['segment','revenue']]
 
 def get_most_probable_regression_ensemble_paths(model, feature_names, n=5):
     paths = pd.DataFrame(columns=['path','revenue'])
     for model_i in model.estimators_:
-        paths = pd.concat([paths, get_regression_tree_paths(model_i, feature_names)[['path','revenue']]], axis=0, sort=False, ignore_index=True)
+        paths = pd.concat([paths, get_regression_tree_paths(model_i, feature_names)], axis=0, sort=False, ignore_index=True)
         
     paths = paths.sort_values(by='revenue', ascending=False).rename({'path':'segment'}, axis=1).reset_index(drop=True)
-    return paths.head(n)
+    
+    paths = paths.head(n)
+    paths['segment'] = paths['segment'].apply(lambda x: x.replace('gender <= 0.5','Женщина').replace('gender > 0.5','Мужчина').replace('code <= 0.5','VIP').replace('code > 0.5','Не VIP').replace('code <= 1.5','Премиальный').replace('code > 1.5','Не премиальный').replace('married <= 0.5','Женат/замужем').replace('married > 0.5','Неженат/незамужем'))
+    
+    return paths[['segment','revenue']]
     

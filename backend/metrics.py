@@ -292,7 +292,10 @@ def MostPayableSegments(model, feature_names, n=5):
     pd.DataFrame
     '''
     
-    segments = tree_utils.get_most_probable_regression_ensemble_paths(model, feature_names, n)
+    try:
+        segments = tree_utils.get_most_probable_regression_ensemble_paths(model, feature_names, n)
+    except:
+        segments = tree_utils.get_most_probable_regression_tree_paths(model, feature_names, n)
     
     return segments
     
@@ -307,6 +310,9 @@ def ChurnSegments(model, feature_names, n=5):
     pd.DataFrame
     '''
     
-    segments = tree_utils.get_most_probable_classification_ensemble_paths(model, feature_names, n)
+    try:
+        segments = tree_utils.get_most_probable_classification_ensemble_paths(model, feature_names, n)
+    except:
+        segments = tree_utils.get_most_probable_classification_tree_paths(model, feature_names, n)
     
     return segments

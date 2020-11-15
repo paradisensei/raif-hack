@@ -22,10 +22,10 @@ PATH_TO_CLIENTS_FILE = 'data/clients.csv'
 PATH_TO_CLIENT_CATEGORIES_FILE = 'data/client_categories.csv'
 PATH_TO_CLIENT_INTERNET_DATA_FILE = 'data/client_internet_data.csv'
 
-PATH_TO_CHURN_MODEL = 'in/churn_prediction_model.pickle'
-PATH_TO_CHURN_MODEL_FEATURES = 'in/churn_prediction_model_features.pickle'
-PATH_TO_FP_MODEL = 'in/fp_segmentation_model.pickle'
-PATH_TO_FP_MODEL_FEATURES = 'in/fp_segmentation_model_features.pickle'
+PATH_TO_CHURN_MODEL = 'in/churn_prediction_rf_model.pickle'
+PATH_TO_CHURN_MODEL_FEATURES = 'in/churn_prediction_rf_model_features.pickle'
+PATH_TO_FP_MODEL = 'in/fp_segmentation_dt_model.pickle'
+PATH_TO_FP_MODEL_FEATURES = 'in/fp_segmentation_dt_model_features.pickle'
 
 app = Flask(__name__, static_folder='assets')
 
