@@ -58,10 +58,12 @@ def dashboard() -> 'html':
     # # value-graph metrics
     client_avg_bill = metric_buttons.button_ClientAverageBill(Transactions, Stores, start_date=start_date, end_date=end_date)
     client_avg_tx = metric_buttons.button_AverageTransactionNumber(Transactions, Stores, start_date=start_date, end_date=end_date)
+    client_revenue = metric_buttons.button_RevenueDynamicByDay(Transactions, Stores, start_date=start_date, end_date=end_date)
 
     # # rating-graph metrics
     income_in_segment = metric_buttons.button_IncomeInSegmentRate(Transactions, Stores, store, start_date=start_date, end_date=end_date)[1:]
     clients_in_segment = metric_buttons.button_ClientNumberInSegmentRate(Transactions, Stores, store, start_date=start_date, end_date=end_date)[1:]
+    tx_in_segment = metric_buttons.button_TransactionNumberInSegmentRate(Transactions, Stores, store, start_date=start_date, end_date=end_date)[1:]
 
     return render_template(
         'index.html',
@@ -73,8 +75,10 @@ def dashboard() -> 'html':
         age=util.age_graph(age),
         client_avg_bill=util.avg_bill_graph(client_avg_bill),
         client_avg_tx=util.avg_tx_graph(client_avg_tx),
+        client_revenue=util.revenue_graph(client_revenue),
         income_in_segment=util.income_in_segment(income_in_segment),
         clients_in_segment=util.clients_in_segment(clients_in_segment),
+        tx_in_segment=util.tx_in_segment(tx_in_segment)
     )
 
 if __name__ == "__main__":
