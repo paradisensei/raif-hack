@@ -420,14 +420,30 @@ def button_Retention(Transactions, Stores, store_name=None, merchant_name=None, 
     
     return metrics.Retention(Transactions)
 
-def button_MostPayableSegments():
+def button_MostPayableSegments(model, feature_names, n=5):
     '''
     in:
+    model: object
+    feature_names: list-like
+    n: int
     
     out:
-    
+    pd.DataFrame
     '''
     
-    return None
+    return MostPayableSegments(model, feature_names, n)
+    
+def button_ChurnSegments(model, feature_names, n=5):
+    '''
+    in:
+    model: object
+    feature_names: list-like
+    n: int
+    
+    out:
+    pd.DataFrame
+    '''
+    
+    return ChurnSegments(model, feature_names, n)
     
     

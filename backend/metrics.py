@@ -54,8 +54,9 @@ def AverageBill(Transactions):
     float
     '''
     
-    n = Transactions['CNUM'].nunique() * 1.0
-    return Transactions['Amount'].sum() / n if n != 0 else np.nan
+    #n = Transactions['CNUM'].nunique() * 1.0
+    #return Transactions['Amount'].sum() / n if n != 0 else np.nan
+    return Transactions['Amount'].mean()
 
 def AverageTransactionNumber(Transactions):
     '''
@@ -269,22 +270,32 @@ def Retention(Transactions):
     
     return retention_matrix
 
-def MostProbableSegments():
+def MostPayableSegments(model, feature_names, n=5):
     '''
     in:
+    model: object
+    feature_names: list-like
+    n: int
     
     out:
-    
+    pd.DataFrame
     '''
     
-    return None
-
-def MostPayableSegments():
+    segments = tree_utils.get_most_probable_regression_ensemble_paths(model, feature_names, n)
+    
+    return segments
+    
+def ChurnSegments(model, feature_names, n=5):
     '''
     in:
+    model: object
+    feature_names: list-like
+    n: int
     
     out:
-    
+    pd.DataFrame
     '''
     
-    return None
+    segments = tree_utils.get_most_probable_classification_ensemble_paths(model, feature_names, n)
+    
+    return segments

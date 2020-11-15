@@ -22,6 +22,11 @@ PATH_TO_CLIENTS_FILE = 'data/clients.csv'
 PATH_TO_CLIENT_CATEGORIES_FILE = 'data/client_categories.csv'
 PATH_TO_CLIENT_INTERNET_DATA_FILE = 'data/client_internet_data.csv'
 
+PATH_TO_CHURN_MODEL = 'in/churn_prediction_model.pickle'
+PATH_TO_CHURN_MODEL_FEATURES = 'in/churn_prediction_model_features.pickle'
+PATH_TO_FP_MODEL = 'in/fp_segmentation_model.pickle'
+PATH_TO_FP_MODEL_FEATURES = 'in/fp_segmentation_model_features.pickle'
+
 app = Flask(__name__, static_folder='assets')
 
 @app.route('/')
@@ -89,6 +94,12 @@ if __name__ == "__main__":
     params = data_handling.read_loader_config(PATH_TO_LOADER_CSV_CONFIG)
     columns = data_handling.read_file_columns(PATH_TO_CLIENTS_COLUMNS)
     Clients = data_handling.data_loader(columns, PATH_TO_CLIENTS_FILE, dict(params))
+    
+    #churn_model = data_handling.load_from_pickle(PATH_TO_CHURN_MODEL)
+    #churn_model_features = data_handling.load_from_pickle(PATH_TO_CHURN_MODEL_FEATURES)
+    
+    fp_model = data_handling.load_from_pickle(PATH_TO_FP_MODEL)
+    fp_model_features = data_handling.load_from_pickle(PATH_TO_FP_MODEL_FEATURES)
 
     # pre-calculate rating-graph metrics
     s = 'Fix Price'

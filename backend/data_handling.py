@@ -1,8 +1,25 @@
 import numpy as np
 import pandas as pd
-import sys, os, random, re, datetime, string
+import sys, os, random, re, datetime, string, pickle
 
 
+
+def save_to_pickle(a, filename):
+    if len(filename) > 0 and filename[-7:] != '.pickle':
+        filename += '.pickle'
+        
+    with open(filename, 'wb') as handle:
+        pickle.dump(a, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+def load_from_pickle(filename):
+    if len(filename) > 0 and filename[-7:] != '.pickle':
+        filename += '.pickle'
+
+    with open(filename, 'rb') as handle:
+        a = pickle.load(handle)
+        
+    return a
 
 def read_loader_config(path_to_file):
     '''
