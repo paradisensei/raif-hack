@@ -26,6 +26,28 @@ PATH_TO_CLIENT_INTERNET_DATA_FILE = 'data/client_internet_data.csv'
 
 
 
+def button_CompetitorsNumber(Transactions, Stores, merchant_name=None, start_date=None, end_date=None):
+    '''
+    in:
+    Transactions: pd.DataFrame
+    Stores: pd.DataFrame
+    merchant_name: str
+    start_date: datetime
+    start_date: datetime
+    
+    out:
+    int
+    '''
+    
+    cond1 = pd.Series(True, index=Transactions.index) if start_date is None else Transactions['Date'] >= start_date
+    cond2 = pd.Series(True, index=Transactions.index) if end_date is None else Transactions['Date'] <= end_date
+    cond3 = pd.Series(True, index=Transactions.index) if merchant_name is None else Transactions['MerchantName'] == merchant_name
+    Transactions = Transactions[cond1&cond2&cond3]
+
+    Transactions = pd.merge(Transactions, Stores, how='inner', on='MerchantName')
+    
+    return metrics.CompetitorsNumber(Transactions)
+
 def button_UniqueClientNumber(Transactions, Stores, store_name=None, merchant_name=None, start_date=None, end_date=None):
     '''
     in:

@@ -9,6 +9,17 @@ from . import tree_utils; reload(tree_utils);
 
 
 
+def CompetitorsNumber(Transactions):
+    '''
+    in:
+    Transactions: pd.DataFrame
+    
+    out:
+    int
+    '''
+    
+    return Transactions['StoreName'].unique().shape[0]-1
+
 def UniqueClientNumber(Transactions):
     '''
     in:
